@@ -4,7 +4,6 @@ import {Link , useLocation} from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon } from '@fortawesome/free-solid-svg-icons'
 import {AiOutlineSearch} from "react-icons/ai"
-// import { FaMoon } from 'react-icons/fa'
 
 export default function Header() {
   const path = useLocation().pathname;
@@ -31,7 +30,7 @@ export default function Header() {
       <FontAwesomeIcon icon={faMoon} className='text-black text-sm '/>
     </Button>
     <Link to="/Signin">
-    <Button className='bg-gradient-to-r from-indigo-500 to-purple-500'>
+    <Button gradientDuoTone="purpleToBlue" outline>
     Sign-In
     </Button>
     </Link>
