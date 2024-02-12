@@ -22,8 +22,8 @@ export default function Header() {
         className='hidden lg:inline'
         />
     </form>
-    <Button className='w-12 h-10 bg-white border-2 border-solid border-gray-200 rounded-full'>
-      <AiOutlineSearch className='text-gray-500 text-lg' />
+    <Button className='w-12 h-10 bg-white border-2 border-solid border-gray-200 rounded-full md:hidden'>
+      <AiOutlineSearch className='text-gray-500 text-lg ' />
     </Button>
     <div className="flex gap-2 md:order-2">
     <Button className="w-12 h-10 hidden sm:inline text-4xl bg-white border-2 border-solid border-gray-200 rounded-full justify-center items-center">
