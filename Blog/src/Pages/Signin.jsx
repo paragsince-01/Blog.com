@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch, useSelector } from "react-redux";
 import { signInStart, signInSuccess, signInFailure } from "../redux/User/userSlice";
+import Oauth from "../Components/Oauth";
 export default function Signin() {
   const [formData, setFormData] = useState({});
   const {loading, error : errorMessage} = useSelector(state => state.user);
@@ -71,7 +72,7 @@ export default function Signin() {
                 <Label value="Your password" />
                 <TextInput
                   type="password"
-                  placeholder="XXXXXXXX"
+                  placeholder="********"
                   id="password"
                   onChange={handleChange}
                 />
@@ -88,6 +89,7 @@ export default function Signin() {
                   )
                 }
               </Button>
+              <Oauth />
             </form>
             <div className="flex gap-2 text-sm mt-5">
               <span>Don't have an account?</span>
