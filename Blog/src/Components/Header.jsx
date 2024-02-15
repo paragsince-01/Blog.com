@@ -14,13 +14,16 @@ import {
 } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
 
 export default function Header() {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
+  const {theme} = useSelector((state)=> state.theme);
+  const dispatch = useDispatch();
   return (
     <>
       <Navbar className="border-b-2">
@@ -46,8 +49,9 @@ export default function Header() {
           <AiOutlineSearch className="text-gray-500 text-lg " />
         </Button>
         <div className="flex gap-2 md:order-2">
-          <Button className="w-12 h-10 hidden sm:inline text-4xl bg-white border-2 border-solid border-gray-200 rounded-full justify-center items-center">
-            <FontAwesomeIcon icon={faMoon} className="text-black text-sm " />
+          <Button className="w-12 h-10 hidden sm:inline text-4xl bg-white border-2 border-solid border-gray-200 rounded-full justify-center items-center px-0 hover:bg-none focus:bg-none" pill onClick={()=>dispatch(toggleTheme())}>
+
+            {theme === 'light' ? <FontAwesomeIcon icon={faSun} className="text-black text-sm pr-2 hover:bg-none focus:bg-none" /> : <FontAwesomeIcon icon={faMoon} className="text-black text-sm hover:bg-none focus:bg-none" /> }
           </Button>
           {currentUser ? (
             <Dropdown
