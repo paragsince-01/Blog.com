@@ -19,7 +19,7 @@ export default function DashboardSidebar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup>
             <Link to='/Dashboard?tab=profile'>
-            <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelcolor='dark'>
+            <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelcolor='dark' as='div'>
                 Profile
             </Sidebar.Item>
             </Link>
