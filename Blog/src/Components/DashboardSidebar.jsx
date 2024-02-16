@@ -24,7 +24,7 @@ export default function DashboardSidebar() {
             </Sidebar.Item>
             </Link>
             {/* ------------------ */}
-            <Sidebar.Item  icon={HiArrowSmRight} cl>
+            <Sidebar.Item  icon={HiArrowSmRight}>
                 Sign Out
             </Sidebar.Item>
         </Sidebar.ItemGroup>
