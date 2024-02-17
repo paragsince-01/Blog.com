@@ -7,11 +7,9 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  const updateUserId = req.params.userId; 
-  const authenticatedUserId = req.user.id; 
 
-if (updateUserId !== authenticatedUserId) {
-  return res.status(403).json({ message: "Forbidden: You can only update your own data." });
+if (req.user.id !== req.params.userId) {
+  return next(errorHandler(403, 'YOU ARE NOT ALLOWED TO UPDATE THIS USER'));
 }
 
   if (req.body.password) {
@@ -56,3 +54,16 @@ if (updateUserId !== authenticatedUserId) {
     next(error);
   }
 };
+
+export const deleteUser = async (req, res, next) =>{
+
+if (req.user.id !== req.params.userId) {
+  return next(errorHandler(403, 'YOU ARE NOT ALLOWED TO DELETE THIS USER'));
+}
+try {
+  await User.findByIdAndDelete(req.params.userId);
+  res.status(200).json('USER HAS BEEN DELETED SUCCESSFULLY');
+} catch (error) {
+  
+}
+}
