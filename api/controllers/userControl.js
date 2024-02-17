@@ -7,10 +7,13 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  // console.log(req.user);
-  if (req.user.id !== req.params.userId) {
-    return next(errorHandler(403, "YOU ARE NOT ALLOWED TO UPDATE THIS USER"));
-  }
+  const updateUserId = req.params.userId; 
+  const authenticatedUserId = req.user.id; 
+
+if (updateUserId !== authenticatedUserId) {
+  return res.status(403).json({ message: "Forbidden: You can only update your own data." });
+}
+
   if (req.body.password) {
     if (req.body.password.length < 6) {
       return next(errorHandler(400, "PASSWORD MUST BE AT LEAST 6 CHARACTERS"));
@@ -35,7 +38,7 @@ export const updateUser = async (req, res, next) => {
     }
   }
   try {
-    const updateUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
         $set: {
@@ -47,7 +50,7 @@ export const updateUser = async (req, res, next) => {
       },
       { new: true }
     );
-    const { password, ...rest } = updateUser._doc;
+    const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {
     next(error);

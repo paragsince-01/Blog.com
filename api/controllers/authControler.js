@@ -28,12 +28,11 @@ export const signup = async (req, res, next) => {
   });
   try {
     await newUser.save();
-    res.json("signup successful");
+    res.json("signUp Successful");
   } catch (error) {
     next(error);
   }
 };
-
 
 // -------------------sign in-------------------------
 
@@ -62,20 +61,18 @@ export const signin = async (req, res, next) => {
       .cookie("access_token", token, {
         httpOnly: true,
       })
-      .json("rest");
+      .json(rest);
   } catch (error) {
     next(error);
   }
 };
-
-
 
 // -------------------google-------------------------
 
 export const google = async (req, res, next) => {
   const { email, name, googlePhotoURL } = req.body;
   // console.log(req.body);
- 
+
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -83,32 +80,35 @@ export const google = async (req, res, next) => {
       const { password, ...rest } = user._doc;
       res
         .status(200)
-        .cookie("acces_token", token, {
+        .cookie("access_token", token, {
           httpOnly: true,
         })
         .json(rest);
     } else {
-      const generatedPassword = 
+      const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-      
+
       const username =
-        (name ? name.toLowerCase().split(' ').join(' ') : 'user') +
+        (name ? name.toLowerCase().split(" ").join(" ") : "user") +
         Math.random().toString(9).slice(-4);
 
       const newUser = new User({
         username,
         email,
         password: hashedPassword,
-        profilePicture:  googlePhotoURL,
+        profilePicture: googlePhotoURL,
       });
       await newUser.save();
-      const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
-      const {password, ...rest }= newUser._doc;
-      res.status(200).cookie('acces_token', token, {
-        httpOnly: true,
-      }).json(rest);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const { password, ...rest } = newUser._doc;
+      res
+        .status(200)
+        .cookie("acces_token", token, {
+          httpOnly: true,
+        })
+        .json(rest);
     }
   } catch (error) {
     next(error);
