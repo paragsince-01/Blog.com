@@ -58,7 +58,7 @@ export default function Signup() {
           </div>
           {/* ------------right side ------------*/}
           <div className="flex-1">
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete="off">
               <div>
                 <Label value="Your username" />
                 <TextInput
@@ -66,6 +66,7 @@ export default function Signup() {
                   placeholder="example@123"
                   id="username"
                   onChange={handleChange}
+                  autoComplete="on"
                 />
               </div>
               <div>
@@ -75,6 +76,7 @@ export default function Signup() {
                   placeholder="example123@gmail.com"
                   id="email"
                   onChange={handleChange}
+                  autoComplete="email"
                 />
               </div>
               <div>
@@ -84,6 +86,7 @@ export default function Signup() {
                   placeholder="********"
                   id="password"
                   onChange={handleChange}
+                  autoComplete="off"
                 />
               </div>
               <Button gradientDuoTone="purpleToPink" type="submit" disabled={loading}>

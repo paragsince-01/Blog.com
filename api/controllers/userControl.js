@@ -6,6 +6,8 @@ export const test = (req, res) => {
   res.json({ message: "API is woking!" });
 };
 
+// update the user
+
 export const updateUser = async (req, res, next) => {
 
 if (req.user.id !== req.params.userId) {
@@ -55,6 +57,8 @@ if (req.user.id !== req.params.userId) {
   }
 };
 
+// Delete the user
+
 export const deleteUser = async (req, res, next) =>{
 
 if (req.user.id !== req.params.userId) {
@@ -67,6 +71,8 @@ try {
   
 }
 }; 
+
+// signed out the user
 
 export const signout = (req, res, next)=>{
   try {

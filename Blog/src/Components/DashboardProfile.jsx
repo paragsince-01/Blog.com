@@ -20,9 +20,10 @@ import {
   signoutSuccess,
 } from "../redux/User/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import {Link} from 'react-router-dom'
 
 export default function DashboardProfile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
 
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -224,10 +225,20 @@ export default function DashboardProfile() {
           placeholder="password"
           onChange={handleUpdateChange}
         />
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          {" "}
-          Update
+        <Button type="submit" gradientDuoTone="purpleToBlue" outline disabled={loading || imageFileUploading}>
+          {loading ? 'loading...' : 'Update'}          
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={"/Create_Post"}>
+            <Button
+              type="button"
+              gradientDuoTone="pinkToOrange"
+              className="w-full"
+            >
+              Create A Post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-amber-500 flex justify-between mt-2">
         <span className="cursor-pointer" onClick={() => setShowPopup(true)}>

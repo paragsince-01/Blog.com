@@ -1,12 +1,16 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {useDispatch, useSelector } from "react-redux";
-import { signInStart, signInSuccess, signInFailure } from "../redux/User/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/User/userSlice";
 import Oauth from "../Components/Oauth";
 export default function Signin() {
   const [formData, setFormData] = useState({});
-  const {loading, error : errorMessage} = useSelector(state => state.user);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -21,17 +25,17 @@ export default function Signin() {
     try {
       dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
-        method: 'POST',
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      });      
+      });
       const data = await res.json();
       if (data.success === false) {
         dispatch(signInFailure(data.message));
       }
-      if(res.ok){
+      if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate('/')
+        navigate("/");
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -58,7 +62,7 @@ export default function Signin() {
           </div>
           {/* ------------right side ------------*/}
           <div className="flex-1">
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete="off">
               <div>
                 <Label value="Your email" />
                 <TextInput
@@ -66,6 +70,7 @@ export default function Signin() {
                   placeholder="example123@gmail.com"
                   id="email"
                   onChange={handleChange}
+                  autoComplete="email"
                 />
               </div>
               <div>
@@ -75,19 +80,22 @@ export default function Signin() {
                   placeholder="********"
                   id="password"
                   onChange={handleChange}
+                  autoComplete="off"
                 />
               </div>
-              <Button gradientDuoTone="purpleToPink" type="submit" disabled={loading}>
-                {
-                  loading ? (
-                    <>
-                    <Spinner size='sm'/>
+              <Button
+                gradientDuoTone="purpleToPink"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Spinner size="sm" />
                     <span>Loading....</span>
-                    </>
-                  ) : (
-                    'Sign In'
-                  )
-                }
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
               <Oauth />
             </form>
