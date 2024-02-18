@@ -3,51 +3,90 @@ import React from "react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
-import {app} from '../firebase'
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import {useNavigate} from 'react-router-dom'
 
 export default function Create_Post() {
   const [file, setFile] = useState(null);
   const [postImageProgress, setPostImageProgress] = useState(null);
   const [postImageError, setPostImageError] = useState(null);
-  const [postFormData, setPostFormData]= useState({})
-  const handlePostImage = async ()=>{
+  const [postFormData, setPostFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
+  const navigate = useNavigate();
+
+  // This is handling the uploading the image for the post
+
+  const handlePostImage = async () => {
     try {
-      if(!file){
-        setPostImageError('Please Select An Image')
+      if (!file) {
+        setPostImageError("Please Select An Image");
         return;
       }
       setPostImageError(null);
       const storage = getStorage(app);
-      const fileName = new Date().getTime() + '-' + file.name; 
+      const fileName = new Date().getTime() + "-" + file.name;
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
-        'state_changed',
-        (snapshot)=>{
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setPostImageProgress(progress.toFixed(0));
-        }, 
-        (error)=>{
-          setPostImageError('Image Upload Failed');
+        },
+        (error) => {
+          setPostImageError("Image Upload Failed");
           setPostImageProgress(null);
         },
-        ()=>{
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setPostImageProgress(null);
             setPostImageError(null);
-            setPostFormData({...postFormData, image:downloadURL});
+            setPostFormData({ ...postFormData, image: downloadURL });
           });
         }
       );
     } catch (error) {
-      setPostImageError('Image Upload Failed');
+      setPostImageError("Image Upload Failed");
       setPostImageProgress(null);
       console.log(error);
     }
-  }
+  };
+
+  //This is handling the uploading of whole post
+
+  const handlePost = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/post/create", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postFormData),
+      });
+      const data = await res.json();
+      if(!res.ok){
+        setPublishError(data.message);
+        return;
+      }
+      if(res.ok){
+        setPublishError(null)
+        navigate(`/post/${data.slug}`)
+      }
+    } catch (error) {
+      setPublishError('Something Went Wrong');
+    }
+  };
+
   return (
     <>
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
@@ -63,8 +102,15 @@ export default function Create_Post() {
               required
               id="title"
               className="flex-1"
+              onChange={(e) =>
+                setPostFormData({ ...postFormData, title: e.target.value })
+              }
             />
-            <Select>
+            <Select
+              onChange={(e) =>
+                setPostFormData({ ...postFormData, category: e.target.value })
+              }
+            >
               <option value="UnCategorized">Select a category</option>
               <option value="html">HTML/HTML5</option>
               <option value="css">CSS</option>
@@ -79,38 +125,57 @@ export default function Create_Post() {
             </Select>
           </div>
           <div className="flex gap-4 items-center justify-between   border-4 border-amber-500 border-dotted p-3 ">
-            <FileInput type="file" accept="image/*" onChange={(e)=>setFile(e.target.files[0])}/>
-            <Button type="button" gradientDuoTone="cyanToBlue" outline onClick={handlePostImage} disabled={postImageProgress}>
-              {
-                postImageProgress ? (
-                  <div className="w-16 h-16">
-                    <CircularProgressbar value={postImageProgress} text={`${postImageProgress || 0}%`}/>
-                  </div>
-                ): (
-                  'Upload Image'
-                )
-              }
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+            <Button
+              type="button"
+              gradientDuoTone="cyanToBlue"
+              outline
+              onClick={handlePostImage}
+              disabled={postImageProgress}
+            >
+              {postImageProgress ? (
+                <div className="w-16 h-16">
+                  <CircularProgressbar
+                    value={postImageProgress}
+                    text={`${postImageProgress || 0}%`}
+                  />
+                </div>
+              ) : (
+                "Upload Image"
+              )}
             </Button>
           </div>
-          {
-            postImageError && <Alert color='failure'>
-              {postImageError}
-            </Alert>
-          }
-          {
-            postFormData.image && (
-              <img src={postFormData.image} alt='uploaded image' className="w-full h-72 object-contain bg-center"/>
-            ) 
-          }
+          {postImageError && <Alert color="failure">{postImageError}</Alert>}
+          {postFormData.image && (
+            <img
+              src={postFormData.image}
+              alt="uploaded image"
+              className="w-full h-72 object-contain bg-center"
+            />
+          )}
           <ReactQuill
             theme="snow"
             placeholder="write something....."
             className="h-72 mb-12"
             required
+            onChange={(value) =>
+              setPostFormData({ ...postFormData, content: value })
+            }
           />
-          <Button type="button" gradientDuoTone="cyanToBlue">
+          <Button
+            type="button"
+            gradientDuoTone="cyanToBlue"
+            onClick={handlePost}
+          >
             Publish
           </Button>
+          {
+            publishError && <Alert color='failure' className="mt-5">{publishError}</Alert> 
+          }
         </form>
       </div>
     </>
