@@ -43,7 +43,7 @@ export const getposts = async (req, res, next) => {
         ],
       }),
     })
-      .sort({ updateAt: sortDirection })
+      .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
@@ -57,14 +57,15 @@ export const getposts = async (req, res, next) => {
       now.getDate()
     );
 
-    const lostMonthPosts = ({
-      createAt :{$gte: oneMonthAgo},
+    const lastMonthPosts = await Post.countDocuments({
+      createdAt :{$gte: oneMonthAgo},
     });
+    
 
     res.status(200).json({
       posts,
       totalPosts,
-      lostMonthPosts,
+      lastMonthPosts,
     });
 
   } catch (error) {
