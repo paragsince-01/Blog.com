@@ -11,6 +11,7 @@ import Footer from './Components/Footer'
 import PrivateRoute from './Components/PrivateRoute'
 import IsAdminPrivateRoute from './Components/IsAdminPrivateRoute'
 import Create_Post from './Pages/Create_Post'
+import Update_Post from './Pages/Update_Post'
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
            {/*Private Route only for admin  */}
           <Route element={<IsAdminPrivateRoute />}>
             <Route path='/Create_Post' element={<Create_Post />} />
+            <Route path='/Update_Post/:postId' element={<Update_Post />} />
           </Route>
         </Routes>
         <Footer />

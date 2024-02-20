@@ -1,6 +1,6 @@
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -12,15 +12,41 @@ import {
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function Create_Post() {
+export default function Update_Post() {
+  const { currentUser } = useSelector((state) => state.user);
   const [file, setFile] = useState(null);
   const [postImageProgress, setPostImageProgress] = useState(null);
   const [postImageError, setPostImageError] = useState(null);
   const [postFormData, setPostFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
+  const { postId } = useParams();
+
+  // Here create a post data will fetch after click on edit
+
+  useEffect(() => {
+    try {
+      const fetchPost = async () => {
+        const res = await fetch(`/api/post/getposts?postId=${postId}`);
+        const data = await res.json();
+        if (!res.ok) {
+          console.log(data.message);
+          setPublishError(data.message);
+          return;
+        }
+        if (res.ok) {
+          setPublishError(null);
+          setPostFormData(data.posts[0]);
+        }
+      };
+      fetchPost();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [postId]);
 
   // This is handling the uploading the image for the post
 
@@ -61,29 +87,33 @@ export default function Create_Post() {
     }
   };
 
-  //This is handling the creating of whole post
+  //This is handling the updating of whole post
 
   const handlePost = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/post/create", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postFormData),
-      });
+      const res = await fetch(
+        `/api/post/updatepost/${postFormData._id}/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postFormData),
+        }
+      );
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         setPublishError(data.message);
         return;
       }
-      if(res.ok){
-        setPublishError(null)
-        navigate(`/post/${data.slug}`)
+      if (res.ok) {
+        setPublishError(null);
+        console.log("Slug:", data.slug);
+        navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      setPublishError('Something Went Wrong');
+      setPublishError("Something Went Wrong");
     }
   };
 
@@ -92,7 +122,7 @@ export default function Create_Post() {
       <div className="p-3 max-w-3xl mx-auto min-h-screen">
         <h1 className="text-center text-3xl my-7 font-bold tracking-wider">
           {" "}
-          Create A Post
+          Update This Post
         </h1>
         <form className="flex flex-col gap-4">
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
@@ -105,11 +135,13 @@ export default function Create_Post() {
               onChange={(e) =>
                 setPostFormData({ ...postFormData, title: e.target.value })
               }
+              value={postFormData.title}
             />
             <Select
               onChange={(e) =>
                 setPostFormData({ ...postFormData, category: e.target.value })
               }
+              value={postFormData.category}
             >
               <option value="UnCategorized">Select a category</option>
               <option value="html">HTML/HTML5</option>
@@ -165,17 +197,20 @@ export default function Create_Post() {
             onChange={(value) =>
               setPostFormData({ ...postFormData, content: value })
             }
+            value={postFormData.content}
           />
           <Button
             type="button"
             gradientDuoTone="cyanToBlue"
             onClick={handlePost}
           >
-            Publish
+            Update Post
           </Button>
-          {
-            publishError && <Alert color='failure' className="mt-5">{publishError}</Alert> 
-          }
+          {publishError && (
+            <Alert color="failure" className="mt-5">
+              {publishError}
+            </Alert>
+          )}
         </form>
       </div>
     </>

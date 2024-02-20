@@ -58,29 +58,50 @@ export const getposts = async (req, res, next) => {
     );
 
     const lastMonthPosts = await Post.countDocuments({
-      createdAt :{$gte: oneMonthAgo},
+      createdAt: { $gte: oneMonthAgo },
     });
-    
 
     res.status(200).json({
       posts,
       totalPosts,
       lastMonthPosts,
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-export const deletepost = async(req, res, next)=>{
-   if(!req.user.isAdmin || req.user.id !== req.params.userId){
-    return next(errorHandler(403, 'You Are Not Allowed To Delete This Post'));
-   }
-   try {
+export const deletepost = async (req, res, next) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return next(errorHandler(403, "You Are Not Allowed To Delete This Post"));
+  }
+  try {
     await Post.findByIdAndDelete(req.params.postId);
-    res.status(200).json('The Post Has Been Deleted');
-   } catch (error) {
-     next(error);
-   }
-}
+    res.status(200).json("The Post Has Been Deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatepost = async (req, res, next) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return next(errorHandler(403, "You Are Not Allowed To Update This Post"));
+  }
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+};
