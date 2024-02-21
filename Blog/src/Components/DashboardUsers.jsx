@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
-import { Link } from "react-router-dom";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+// import { Link } from "react-router-dom";
+// import { HiOutlineExclamationCircle } from "react-icons/hi";
+import {FaCheck, FaTimes} from 'react-icons/fa'
 
-export default function DashboardPosts() {
+export default function DashboardUsers() {
   const { currentUser } = useSelector((state) => state.user);
-  const [postData, setPostData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState(null);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
-  // here posts are fetched from the backend
+  // here users are fetched from the backend
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
         if (res.ok) {
-          setPostData(data.posts);
-          if (data.posts.length < 9) {
+          setUserData(data.users);
+          if (data.users.length < 9) {
             setShowMore(false);
           }
         }
@@ -29,22 +30,20 @@ export default function DashboardPosts() {
       }
     };
     if (currentUser.isAdmin) {
-      fetchPosts();
+      fetchUsers();
     }
   }, [currentUser._id]);
 
   // here showmore button functionality is applied
 
   const handleShowMore = async () => {
-    const startIndex = postData.length;
+    const startIndex = userData.length;
     try {
-      const res = await fetch(
-        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
-        setPostData((prev) => [...prev, ...data.posts]);
-        if (data.posts.length < 9) {
+        setUserData((prev) => [...prev, ...data.users]);
+        if (data.users.length < 9) {
           setShowMore(false);
         }
       }
@@ -53,91 +52,85 @@ export default function DashboardPosts() {
     }
   };
 
-  // here delete post functionality is applied
+  // here delete user functionality is applied
 
-  const handleDeletePost = async () => {
-    setShowPopup(false);
-    try {
-      const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,{
-        method: 'DELETE',
-      });
-      const data = await res.json();
-      if(!res.ok){
-        console.log(data.message);
-      }
-      else{        
-        setPostData((prev)=>
-        prev.filter((post)=>post._id !== postIdToDelete));
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
- 
+  //   const handleDeleteUser = async () => {
+  //     setShowPopup(false);
+  //     try {
+  //       const res = await fetch(`/api/user/deleteuser/${userIdToDelete}/${currentUser._id}`,{
+  //         method: 'DELETE',
+  //       });
+  //       const data = await res.json();
+  //       if(!res.ok){
+  //         console.log(data.message);
+  //       }
+  //       else{
+  //         setUserData((prev)=>
+  //         prev.filter((user)=>user._id !== userIdToDelete));
+  //       }
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   };
+
   return (
     <>
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-        {currentUser.isAdmin && postData.length > 0 ? (
+        {currentUser.isAdmin && userData.length > 0 ? (
           <>
             <Table hoverable className="shadow-md">
               <Table.Head className="text-sm font-medium tracking-wider text-gray-700  dark:text-white">
-                <Table.HeadCell>Date Updated</Table.HeadCell>
-                <Table.HeadCell>Post Image</Table.HeadCell>
-                <Table.HeadCell>Post Title</Table.HeadCell>
-                <Table.HeadCell>Category</Table.HeadCell>
+                <Table.HeadCell>Date Created</Table.HeadCell>
+                <Table.HeadCell>User Image</Table.HeadCell>
+                <Table.HeadCell>Username</Table.HeadCell>
+                <Table.HeadCell>Email</Table.HeadCell>
+                <Table.HeadCell>Admin</Table.HeadCell>
                 <Table.HeadCell>Delete</Table.HeadCell>
-                <Table.HeadCell>Edit</Table.HeadCell>
               </Table.Head>
-              {postData.map((post) => (
+              {userData.map((user) => (
                 <Table.Body
-                  key={post._id}
+                  key={user._id}
                   className="text-sm font-medium tracking-wide text-gray-700  dark:text-white divide-y"
                 >
                   <Table.Row>
                     {/*------ table updated at */}
                     <Table.Cell>
-                      {new Date(post.updatedAt).toLocaleDateString()}
+                      {new Date(user.createdAt).toLocaleDateString()}
                     </Table.Cell>
 
-                    {/*------ post image -------*/}
+                    {/*------ user image -------*/}
                     <Table.Cell>
-                      <Link to={`/post/${post.slug}`}>
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-20 h-10 object-contain bg-gray-500"
-                        />
-                      </Link>
+                      <img
+                        src={user.profilePicture}
+                        alt={user.username}
+                        className="w-10 h-10 object-contain bg-gray-500 rounded-full"
+                      />
                     </Table.Cell>
 
-                    {/*------ post title ------*/}
+                    {/*------ user's username ------*/}
+                    <Table.Cell>{user.username}</Table.Cell>
+
+                    {/*------ user category ------*/}
                     <Table.Cell>
-                      <Link to={`/post/${post.slug}`}>{post.title}</Link>
+                      <span>{user.email}</span>
                     </Table.Cell>
 
-                    {/*------ post category ------*/}
+                    {/*------ user category ------*/}
                     <Table.Cell>
-                      <span>{post.category}</span>
+                      <span>{user.isAdmin ? (<FaCheck className="text-green-500" />) : (<FaTimes className="text-red-500" />)}</span>
                     </Table.Cell>
 
-                    {/*------ post delete option ------*/}
+                    {/*------ user delete option ------*/}
                     <Table.Cell>
                       <span
                         className="text-red-500 hover:underline cursor-pointer"
                         onClick={() => {
                           setShowPopup(true);
-                          setPostIdToDelete(post._id);
+                          setUserIdToDelete(user._id);
                         }}
                       >
-                        Delete
+                        Delete User
                       </span>
-                    </Table.Cell>
-
-                    {/*------ post edit option ------*/}
-                    <Table.Cell className="text-blue-500 hover:underline">
-                      <Link to={`/update_post/${post._id}`}>
-                        <span>Edit</span>
-                      </Link>
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
@@ -153,9 +146,9 @@ export default function DashboardPosts() {
             )}
           </>
         ) : (
-          <p>You Have NO Posts Yet!</p>
+          <p>You Have No Users Yet!</p>
         )}
-        <Modal
+        {/* <Modal
           show={showPopup}
           onClose={() => setShowPopup(false)}
           popup
@@ -166,10 +159,10 @@ export default function DashboardPosts() {
             <div className="text-center">
               <HiOutlineExclamationCircle className="w-12 h-12 text-red-700 dark:text-red-700 mb-4 mx-auto" />
               <h3 className="mb-5 text-lg text-black dark:text-black">
-                You Want To Delete This Post
+                You Want To Delete This user
               </h3>
               <div className="flex justify-evenly gap-4">
-                <Button onClick={handleDeletePost} color="failure">
+                <Button onClick={handleDeleteUser} color="failure">
                   Yes, I'm Sure
                 </Button>
                 <Button onClick={() => setShowPopup(false)} color="gray">
@@ -178,7 +171,7 @@ export default function DashboardPosts() {
               </div>
             </div>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
       </div>
     </>
   );
