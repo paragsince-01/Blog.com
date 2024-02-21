@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
 // import { Link } from "react-router-dom";
-// import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {FaCheck, FaTimes} from 'react-icons/fa'
 
 export default function DashboardUsers() {
@@ -54,24 +54,24 @@ export default function DashboardUsers() {
 
   // here delete user functionality is applied
 
-  //   const handleDeleteUser = async () => {
-  //     setShowPopup(false);
-  //     try {
-  //       const res = await fetch(`/api/user/deleteuser/${userIdToDelete}/${currentUser._id}`,{
-  //         method: 'DELETE',
-  //       });
-  //       const data = await res.json();
-  //       if(!res.ok){
-  //         console.log(data.message);
-  //       }
-  //       else{
-  //         setUserData((prev)=>
-  //         prev.filter((user)=>user._id !== userIdToDelete));
-  //       }
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   };
+    const handleDeleteUser = async () => {
+      setShowPopup(false);
+      try {
+        const res = await fetch(`/api/user/delete/${userIdToDelete}`,{
+          method: 'DELETE',
+        });
+        const data = await res.json();
+        if(!res.ok){
+          console.log(data.message);
+        }
+        else{
+          setUserData((prev)=>
+          prev.filter((user)=>user._id !== userIdToDelete));
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
 
   return (
     <>
@@ -148,7 +148,7 @@ export default function DashboardUsers() {
         ) : (
           <p>You Have No Users Yet!</p>
         )}
-        {/* <Modal
+        <Modal
           show={showPopup}
           onClose={() => setShowPopup(false)}
           popup
@@ -171,7 +171,7 @@ export default function DashboardUsers() {
               </div>
             </div>
           </Modal.Body>
-        </Modal> */}
+        </Modal>
       </div>
     </>
   );
