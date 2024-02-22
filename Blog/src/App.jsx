@@ -13,11 +13,13 @@ import IsAdminPrivateRoute from './Components/IsAdminPrivateRoute'
 import Create_Post from './Pages/Create_Post'
 import Update_Post from './Pages/Update_Post'
 import Post from './Pages/Post'
+import ScrollToTop from './Components/ScrollToTop'
 
 export default function App() {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <Header />
         <Routes>
           <Route path="/" element={<Home/>}/>

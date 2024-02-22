@@ -11,7 +11,7 @@ export default function CallToAction() {
                 Want To Learn More About MERN Stack?
             </h2>
             <p className="text-gray-500 my-2">
-                Check Out These Resources on MERN Projects 
+                Check Out These Resources on MERN
             </p>
             <Button gradientDuoTone='purpleToBlue' className='rounded-tl-xl rounded-bl-none'>
                <a href="https://www.youtube.com/@Firedkid1.0" target='_blank' rel='noopener noreferrer'>Learn More</a> </Button>

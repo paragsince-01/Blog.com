@@ -5,12 +5,13 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoute.js'
 import authRoutes from './routes/authRoute.js'
 import postRoutes from './routes/postRoute.js'
+import commentRoute from './routes/commentRoute.js'
 import cookieParser from 'cookie-parser';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
 .then(()=>{
-    console.log('MongoDB is Connected');
+    console.log('MongoDB :  Connected');
 }).catch((err)=>{
     console.log(err);
 });
@@ -25,13 +26,14 @@ app.use(cookieParser());
 // app.use(cors(corsOptions));
 
 app.listen(3000, ()=>{
-        console.log('server is runing on port 3000');
+        console.log('Server port : 3000');
     }
 );
 
 app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/post', postRoutes);
+app.use('/api/comment',commentRoute);
 
 app.use((err, req, res, next)=>{
     const statusCode= err.statusCode || 500;
