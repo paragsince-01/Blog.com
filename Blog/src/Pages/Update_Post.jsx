@@ -24,7 +24,6 @@ export default function Update_Post() {
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
   const { postId } = useParams();
-
   // Here create a post data will fetch after click on edit
 
   useEffect(() => {
@@ -109,7 +108,6 @@ export default function Update_Post() {
       }
       if (res.ok) {
         setPublishError(null);
-        console.log("Slug:", data.slug);
         navigate(`/post/${data.slug}`);
       }
     } catch (error) {
