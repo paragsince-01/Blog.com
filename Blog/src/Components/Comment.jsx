@@ -1,27 +1,30 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import CommentSection from "./CommentSection";
 
 export default function Comment(postId) {
   const { currentUser } = useSelector((state) => state.user);
   const [commentChar, setCommentChar] = useState("");
+  // console.log(commentChar._id);
   const [commentError, setCommentError] = useState(null);
+  const [postComment, setPostComment] = useState([]);
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
-    if(commentChar.length === 0){
-      alert('You did not write any thing');
+    if (commentChar.length === 0) {
+      alert("You did not write any thing");
     }
     if (commentChar.length > 200) {
       return;
     }
     try {
-      const res = await fetch('/api/comment/create', {
-        method: 'POST',
+      const res = await fetch("/api/comment/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           content: commentChar,
@@ -32,14 +35,28 @@ export default function Comment(postId) {
       const data = await res.json();
       if (res.ok) {
         setCommentChar("");
-        setCommentError(null)
+        setCommentError(null);
+        setPostComment([data, ...postComment])
       }
-      
     } catch (error) {
-      setCommentError(error.message)
+      setCommentError(error.message);
     }
-    
   };
+
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await fetch(`/api/comment/getPostComment/${postId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setPostComment(data);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getComments();
+  }, [postId]);
   return (
     <>
       <div className="max-w-2xl mx-auto w-full">
@@ -85,12 +102,30 @@ export default function Comment(postId) {
                 Submit
               </Button>
             </div>
-           {
-            commentError && (
-              <Alert color='failure' className="mt-5">{commentError}</Alert>
-            )
-           }
+            {commentError && (
+              <Alert color="failure" className="mt-5">
+                {commentError}
+              </Alert>
+            )}
           </form>
+        )}
+        {postComment.length === 0 ? (
+          <p className="text-lg my-5">No Comments Yet!</p>
+        ) : (
+          <>
+            <div className="my-5 gap-2 items-center flex text-sm tracking-wider">
+              <p className="">
+                {postComment.length === 1 ? "Comment" : "Comments"}
+              </p>
+              <div className=" border-2 border-amber-400 py-1 px-2 font-bold rounded-md">
+                <p>{postComment.length}</p>
+                {}
+              </div>
+            </div>
+            {postComment.map((comment) => (
+              <CommentSection key={comment._id} comment={comment} />
+            ))}
+          </>
         )}
       </div>
     </>

@@ -92,12 +92,11 @@ export const getUsers = async (req, res, next) => {
       .skip(startIndex)
       .limit(limit);
 
-    const usersWithoutPassowrd = users.map((user)=>{
-      const {password, ...rest} = user._doc;
+    const usersWithoutPassowrd = users.map((user) => {
+      const { password, ...rest } = user._doc;
       return rest;
     });
 
-      
     const totalUsers = await User.countDocuments();
 
     const now = new Date();
@@ -122,4 +121,16 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
-// export deleteUser
+// here users are fetched for commentSection
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return next(errorHandler(404, 'User not found'));
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
