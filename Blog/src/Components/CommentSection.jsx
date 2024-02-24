@@ -66,13 +66,13 @@ export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
 
         {/* ----------user's username---------- */}
         <div className="flex-1">
-          <div className="flex items-center mb-2 text-gray-900 dark:text-amber-500 tracking-wide">
+          <div className="flex items-center mb-2 text-gray-900 dark:text-white tracking-wide">
             <span className="font-semibold mr-1 truncate">
               {user ? `@${user.username}` : "anonymous user"}
             </span>
 
             {/* ----------time of creation---------- */}
-            <span className=" text-gray-500">
+            <span className=" text-gray-500 text-xs">
               {moment(comment.createdAt).fromNow()}
             </span>
           </div>
@@ -105,7 +105,7 @@ export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
             </>
           ) : (
             <>
-              <p className="text-gray-900 dark:text-white pb-2">
+              <p className="text-gray-900 dark:text-gray-400 pb-2">
                 {comment.content}
               </p>
               <div className="flex items-center pt-2 text-xs border-t border-gray-900 dark:border-white max-w-fit gap-2">
