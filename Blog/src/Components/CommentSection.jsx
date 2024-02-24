@@ -4,7 +4,7 @@ import { Button, Textarea } from "flowbite-react";
 import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
-export default function CommentSection({ comment, onLike, onEdit }) {
+export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
   const [user, setUser] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,7 +39,7 @@ export default function CommentSection({ comment, onLike, onEdit }) {
           content: editedComment,
         }),
       });
-      if(res.ok){
+      if (res.ok) {
         setIsEditing(false);
         onEdit(comment, editedComment);
       }
@@ -130,23 +130,21 @@ export default function CommentSection({ comment, onLike, onEdit }) {
                 {currentUser &&
                   (currentUser._id === comment.userId ||
                     currentUser.isAdmin) && (
-                    <button
-                      type="button"
-                      className="text-blue-500 font-bold tracking-wide"
-                      onClick={handleEditComment}
-                    >
-                      Edit
-                    </button>
-                  )}
-                {currentUser &&
-                  (currentUser._id === comment.userId ||
-                    currentUser.isAdmin) && (
-                    <button
-                      type="button"
-                      className="text-red-500 font-bold tracking-wide"
-                    >
-                      Delete
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        className="text-blue-500 font-bold tracking-wide"
+                        onClick={handleEditComment}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="text-red-500 font-bold tracking-wide" onClick={()=>onDelete(comment._id)}
+                      >
+                        Delete
+                      </button>
+                    </>
                   )}
               </div>
             </>
