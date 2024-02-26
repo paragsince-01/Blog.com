@@ -10,8 +10,8 @@ export default function Post() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
+  // console.log(postd);
   const [recentPosts, setRecentsPosts] = useState(null);
-  // console.log(recentPosts);
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -73,7 +73,7 @@ export default function Post() {
           className="self-center mt-5"
         >
           <Button color="gray" pill size="lg">
-            {post && post.category.toUpperCase()}
+            {post && post.category}
           </Button>
         </Link>
 

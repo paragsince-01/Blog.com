@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export default function Comment(postId) {
+export default function Comment({postId}) {
   const { currentUser } = useSelector((state) => state.user);
   const [commentChar, setCommentChar] = useState("");
   const [commentError, setCommentError] = useState(null);
@@ -19,6 +19,7 @@ export default function Comment(postId) {
     e.preventDefault();
     if (commentChar.length === 0) {
       alert("You did not write any thing");
+      return;
     }
     if (commentChar.length > 200) {
       return;
@@ -31,7 +32,7 @@ export default function Comment(postId) {
         },
         body: JSON.stringify({
           content: commentChar,
-          postId: String(postId),
+          postId,
           userId: currentUser._id,
         }),
       });
@@ -120,8 +121,8 @@ export default function Comment(postId) {
     <>
       <div className="max-w-2xl mx-auto w-full">
         {currentUser ? (
-          <div className="flex flex-row gap-1 items-center my-5 dark:text-gray-400 text-sm">
-            <p className="">Signed In As_: </p>
+          <div className="flex flex-row gap-2 items-center my-5 dark:text-gray-400 text-sm">
+            <p className="">Signed In As : </p>
             <img
               src={currentUser.profilePicture}
               className="h-8 w-8 rounded-full object-cover"

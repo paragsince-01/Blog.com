@@ -3,25 +3,24 @@ import { useSelector } from "react-redux";
 import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
 // import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import {FaCheck, FaTimes} from 'react-icons/fa'
 
-export default function DashboardUsers() {
+export default function DashboardComments() {
   const { currentUser } = useSelector((state) => state.user);
-  const [userData, setUserData] = useState([]);
+  const [commentData, setCommentData] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
 
-  // here users are fetched from the backend
+  // here comments are fetched from the backend
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/user/getusers`);
+        const res = await fetch(`/api/comment/getComments`);
         const data = await res.json();
         if (res.ok) {
-          setUserData(data.users);
-          if (data.users.length < 9) {
+          setCommentData(data.comments);
+          if (data.comments.length < 9) {
             setShowMore(false);
           }
         }
@@ -30,20 +29,22 @@ export default function DashboardUsers() {
       }
     };
     if (currentUser.isAdmin) {
-      fetchUsers();
+      fetchComments();
     }
   }, [currentUser._id]);
 
   // here showmore button functionality is applied
 
   const handleShowMore = async () => {
-    const startIndex = userData.length;
+    const startIndex = commentData.length;
     try {
-      const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
+      const res = await fetch(
+        `/api/comment/getComments?startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
-        setUserData((prev) => [...prev, ...data.users]);
-        if (data.users.length < 9) {
+        setCommentData((prev) => [...prev, ...data.comments]);
+        if (data.comments.length < 9) {
           setShowMore(false);
         }
       }
@@ -52,81 +53,68 @@ export default function DashboardUsers() {
     }
   };
 
-  // here delete user functionality is applied
+  // here delete comment functionality is applied
 
-    const handleDeleteUser = async () => {
-      setShowPopup(false);
-      try {
-        const res = await fetch(`/api/user/delete/${userIdToDelete}`,{
-          method: 'DELETE',
-        });
-        const data = await res.json();
-        if(!res.ok){
-          console.log(data.message);
+  const handleDeletecomment = async () => {
+    setShowPopup(false);
+    try {
+      const res = await fetch(
+        `/api/comment/deleteComment/${commentIdToDelete}`,
+        {
+          method: "DELETE",
         }
-        else{
-          setUserData((prev)=>
-          prev.filter((user)=>user._id !== userIdToDelete));
-        }
-      } catch (error) {
-        console.log(error.message);
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setCommentData((prev) =>
+          prev.filter((comment) => comment._id !== commentIdToDelete)
+        );
       }
-    };
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-        {currentUser.isAdmin && userData.length > 0 ? (
+        {currentUser.isAdmin && commentData.length > 0 ? (
           <>
             <Table hoverable className="shadow-md">
               <Table.Head className="text-sm font-medium tracking-wider text-gray-700  dark:text-white">
-                <Table.HeadCell>Date Created</Table.HeadCell>
-                <Table.HeadCell>User Image</Table.HeadCell>
-                <Table.HeadCell>Username</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Admin</Table.HeadCell>
+                <Table.HeadCell>Date Updated</Table.HeadCell>
+                <Table.HeadCell>Comment Content</Table.HeadCell>
+                <Table.HeadCell>Commnet Likes</Table.HeadCell>
+                <Table.HeadCell>PostId</Table.HeadCell>
+                <Table.HeadCell>UserId</Table.HeadCell>
                 <Table.HeadCell>Delete</Table.HeadCell>
               </Table.Head>
-              {userData.map((user) => (
+              {commentData.map((comment) => (
                 <Table.Body
-                  key={user._id}
+                  key={comment._id}
                   className="text-sm font-medium tracking-wide text-gray-700  dark:text-white divide-y"
                 >
                   <Table.Row>
-                    {/*------ table updated at */}
                     <Table.Cell>
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(comment.updatedAt).toLocaleDateString()}
                     </Table.Cell>
 
-                    {/*------ user image -------*/}
-                    <Table.Cell>
-                      <img
-                        src={user.profilePicture}
-                        alt={user.username}
-                        className="w-10 h-10 object-contain bg-gray-500 rounded-full"
-                      />
-                    </Table.Cell>
+                    <Table.Cell>{comment.content}</Table.Cell>
 
-                    {/*------ user's username ------*/}
-                    <Table.Cell>{user.username}</Table.Cell>
+                    <Table.Cell>{comment.numberOfLikes}</Table.Cell>
 
-                    {/*------ user category ------*/}
-                    <Table.Cell>
-                      <span>{user.email}</span>
-                    </Table.Cell>
+                    <Table.Cell>{comment.postId}</Table.Cell>
 
-                    {/*------ user category ------*/}
-                    <Table.Cell>
-                      <span>{user.isAdmin ? (<FaCheck className="text-green-500" />) : (<FaTimes className="text-red-500" />)}</span>
-                    </Table.Cell>
+                    <Table.Cell>{comment.userId}</Table.Cell>
 
-                    {/*------ user delete option ------*/}
                     <Table.Cell>
                       <span
                         className="text-red-500 hover:underline cursor-pointer"
                         onClick={() => {
                           setShowPopup(true);
-                          setUserIdToDelete(user._id);
+                          setCommentIdToDelete(comment._id);
                         }}
                       >
                         Delete
@@ -146,7 +134,7 @@ export default function DashboardUsers() {
             )}
           </>
         ) : (
-          <p>You Have No Users Yet!</p>
+          <p>You Have No comments Yet!</p>
         )}
         <Modal
           show={showPopup}
@@ -159,10 +147,10 @@ export default function DashboardUsers() {
             <div className="text-center">
               <HiOutlineExclamationCircle className="w-12 h-12 text-red-700 dark:text-red-700 mb-4 mx-auto" />
               <h3 className="mb-5 text-lg text-black dark:text-black">
-                You Want To Delete This user
+                You Want To Delete This comment
               </h3>
               <div className="flex justify-evenly gap-4">
-                <Button onClick={handleDeleteUser} color="failure">
+                <Button onClick={handleDeletecomment} color="failure">
                   Yes, I'm Sure
                 </Button>
                 <Button onClick={() => setShowPopup(false)} color="gray">

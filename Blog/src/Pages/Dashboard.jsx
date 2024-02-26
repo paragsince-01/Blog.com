@@ -4,6 +4,7 @@ import DashboardSidebar from "../Components/DashboardSidebar";
 import DashboardProfile from "../Components/DashboardProfile";
 import DashboardPosts from "../Components/DashboardPosts";
 import DashboardUsers from "../Components/DashboardUsers";
+import DashboardComments from "../Components/DashboardComments";
 
 export default function Dashboard() {
   const loaction = useLocation();
@@ -29,6 +30,9 @@ export default function Dashboard() {
       
       {/* ------------users------------*/}
       {tab === "users" && <DashboardUsers />}
+      
+      {/* ------------comments------------*/}
+      {tab === "comments" && <DashboardComments />}
     </div>
   );
 }
