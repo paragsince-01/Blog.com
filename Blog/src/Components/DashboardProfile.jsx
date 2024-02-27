@@ -232,7 +232,7 @@ export default function DashboardProfile() {
           <Link to={"/Create_Post"}>
             <Button
               type="button"
-              gradientDuoTone="pinkToOrange"
+              gradientDuoTone="purpleToPink"
               className="w-full"
             >
               Create A Post
@@ -240,11 +240,11 @@ export default function DashboardProfile() {
           </Link>
         )}
       </form>
-      <div className="text-amber-500 flex justify-between mt-2">
-        <span className="cursor-pointer" onClick={() => setShowPopup(true)}>
+      <div className=" flex justify-between mt-2">
+        <span className="cursor-pointer text-amber-800 dark:text-amber-500 hover:underline font-semibold " onClick={() => setShowPopup(true)}>
           Delete Account
         </span>
-        <span className="cursor-pointer" onClick={handleSignout}>
+        <span className="cursor-pointer text-amber-500 hover:underline font-semibold " onClick={handleSignout}>
           Sign Out
         </span>
       </div>
@@ -277,8 +277,8 @@ export default function DashboardProfile() {
               You Want To Delete This Account
             </h3>
             <div className="flex justify-evenly gap-4">
-              <Button onClick={handleDelete}>Yes, I'm Sure</Button>
-              <Button onClick={() => setShowPopup(false)}>Cancel</Button>
+              <Button onClick={handleDelete} color="failure">Yes, I'm Sure</Button>
+              <Button onClick={() => setShowPopup(false)} color="gray" >Cancel</Button>
             </div>
           </div>
         </Modal.Body>

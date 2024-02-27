@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Navbar,
@@ -12,7 +12,7 @@ import {
   DropdownItem,
   DropdownDivider,
 } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -22,9 +22,20 @@ import { signoutSuccess } from "../redux/User/userSlice";
 
 export default function Header() {
   const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  const {theme} = useSelector((state)=> state.theme);
+  const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromURL = urlParams.get("searchTerm");
+    if (searchTermFromURL) {
+      setSearchTerm(searchTermFromURL);
+    }
+  }, [location.search]);
 
   // Signed out the user
 
@@ -44,9 +55,16 @@ export default function Header() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
   return (
     <>
-      <Navbar className="border-b-2">
+      <Navbar className="border-b-2 ">
         <Link
           to="/"
           className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
@@ -57,21 +75,36 @@ export default function Header() {
           </span>
           Blog
         </Link>
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
             placeholder="Search...."
             rightIcon={AiOutlineSearch}
             className="hidden lg:inline"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
-        <Button className="w-12 h-10 bg-white border-2 border-solid border-gray-200 rounded-full md:hidden">
-          <AiOutlineSearch className="text-gray-500 text-lg " />
-        </Button>
+        <button className="w-12 h-10 bg-white dark:bg-white border-2 border-solid border-gray-500 font-bold text-2xl focus:bg-white rounded-full md:hidden mx-auto" onClick={()=>{navigate('/search')}}>
+          <AiOutlineSearch className="text-gray-950 text-lg w-10 " />
+        </button>
         <div className="flex gap-2 md:order-2">
-          <Button className="w-12 h-10 hidden sm:inline text-4xl bg-white border-2 border-solid border-gray-200 rounded-full justify-center items-center px-0 hover:bg-none focus:bg-none" pill onClick={()=>dispatch(toggleTheme())}>
-
-            {theme === 'light' ? <FontAwesomeIcon icon={faSun} className="text-black text-sm pr-2 hover:bg-none focus:bg-none" /> : <FontAwesomeIcon icon={faMoon} className="text-black text-sm hover:bg-none focus:bg-none" /> }
+          <Button
+            className="w-12 h-10 sm:inline text-4xl bg-white border-2 border-solid border-gray-200 rounded-full justify-center items-center px-0 hover:bg-none focus:bg-none"
+            pill
+            onClick={() => dispatch(toggleTheme())}
+          >
+            {theme === "light" ? (
+              <FontAwesomeIcon
+                icon={faSun}
+                className="text-black text-sm  hover:bg-none focus:bg-none"
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faMoon}
+                className="text-black text-sm hover:bg-none focus:bg-none"
+              />
+            )}
           </Button>
           {currentUser ? (
             <Dropdown
@@ -82,11 +115,14 @@ export default function Header() {
               }
             >
               <Dropdown.Header>
-                <span className='block text-sm'>@{currentUser.username}</span>
-                <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
+                <span className="block text-sm">@{currentUser.username}</span>
+                <span className="block text-sm font-medium truncate">
+                  {currentUser.email}
+                </span>
               </Dropdown.Header>
-              <Link to='/Dashboard?tab=profile'>
-              <Dropdown.Item>Profile</Dropdown.Item></Link>
+              <Link to="/Dashboard?tab=profile">
+                <Dropdown.Item>Profile</Dropdown.Item>
+              </Link>
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleSignout}>Sign-Out</Dropdown.Item>
             </Dropdown>
@@ -102,15 +138,15 @@ export default function Header() {
         </div>
         <Navbar.Collapse>
           <Navbar.Link active={path === "/"} as={"div"}>
-            <Link to="/">Home</Link>
+            <Link to="/" className="text-lg">Home</Link>
           </Navbar.Link>
 
           <Navbar.Link active={path === "/About"} as={"div"}>
-            <Link to="/About">About</Link>
+            <Link to="/About" className="text-lg">About</Link>
           </Navbar.Link>
 
           <Navbar.Link active={path === "/Projects"} as={"div"}>
-            <Link to="/Projects">Projects</Link>
+            <Link to="/Projects" className="text-lg">Projects</Link>
           </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
