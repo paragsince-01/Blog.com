@@ -92,7 +92,7 @@ export default function Post() {
 
         {/* ----------post-content---------- */}
         <div
-          className="p-3 max-auto w-full postContent self-center max-w-3xl tracking-wide dark:text-gray-400 text-gray-700"
+          className="p-3 max-auto w-full postContent self-center max-w-3xl tracking-wide dark:text-gray-300 text-gray-700"
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
         <div className="max-w-4xl mx-auto w-full">

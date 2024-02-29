@@ -8,13 +8,13 @@ export default function PostCard({ post }) {
         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <Link to={`/post/${post.slug}`} className="">
             <img
-              className="rounded-t-lg "
+              className="rounded-t-lg"
               src={post.image}
               alt=""              
             />
             </Link>
           <div className="p-5">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white group-hover:underline decoration-pink-400 decoration-2 line-clamp-2">
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white  line-clamp-2">
                 {post.title}
               </h5>
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 capitalize">

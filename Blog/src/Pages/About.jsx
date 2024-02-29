@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function About() {
   return (
     <>
-      <div className="grid grid-col-1 gap-y-0  min-h-[95vh] md:p-12 text-gray-300 ">
+      <div className="grid grid-col-1 gap-y-0  min-h-[95vh] md:p-12 text-gray-700 dark:text-gray-300">
         <div className="flex flex-col w-full p-10">
           <h1 className="text-2xl tracking-wide flex gap-2 items-center">
             About <strong className="text-3xl">Parag's Blog</strong>
@@ -44,39 +44,46 @@ export default function About() {
             Categories That I Write || Code In :
           </h1>
           <div className="grid grid-cols-3 items-center mt-6 gap-y-4 tracking-wider ">
-            <Link>
+            <Link to='/post/a-comprehensive-view-on----html'>
               <strong className="hover:underline">HTML || HTML5</strong>
             </Link>
-            <Link>
+
+            <Link to='/post/cascading-style-sheet---a-comprehensive-view'>
               <strong className="hover:underline">CSS</strong>
             </Link>
-            <Link>
+
+            <Link to='/post/a-comprehensive-view-on----javascript'>
               <strong className="hover:underline">JavaScript</strong>
             </Link>
-            <Link>
+
+            <Link to="/post/a-comprehensive-view-on----bootstrap">
               <strong className="hover:underline">Bootstrap</strong>
             </Link>
-            <Link>
+
+            <Link to='/post/a-comprehensive-view-on----materialui'>
               <strong className="hover:underline">MaterialUI</strong>
             </Link>
-            <Link>
+
+            <Link to="/post/a-comprehensive-view-on----tailwind-css">
               <strong className="hover:underline">TailwindCSS</strong>
             </Link>
-            <Link>
+
+            <Link to="/post/a-comprehensive-view-on----react-js">
               <strong className="hover:underline">React.js</strong>
             </Link>
-            <Link>
+
+            <Link to="/post/a-comprehensive-view-on----node-js">
               <strong className="hover:underline">Node.js</strong>
             </Link>
-            <Link>
+
+            <Link to="/post/a-comprehensive-view-on----express-js">
               <strong className="hover:underline">Express.js</strong>
             </Link>
-            <Link>
+
+            <Link to='/post/a-comprehensive-view-on-mongodb'>
               <strong className="hover:underline">MongoDB</strong>
             </Link>
-            <Link>
-              <strong className="hover:underline">Redux</strong>
-            </Link>
+            
           </div>
         </div>
       </div>
