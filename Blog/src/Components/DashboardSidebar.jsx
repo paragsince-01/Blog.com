@@ -107,6 +107,8 @@ export default function DashboardSidebar() {
                 </Sidebar.Item>
               </Link>
 
+            </>
+          )}
               {/* ------signout------------ */}
               <Sidebar.Item
                 icon={HiArrowSmRight}
@@ -115,8 +117,6 @@ export default function DashboardSidebar() {
               >
                 Sign Out
               </Sidebar.Item>
-            </>
-          )}
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>

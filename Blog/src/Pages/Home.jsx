@@ -34,7 +34,7 @@ export default function Home() {
           posts && posts.length > 0 && (
             <div className="flex flex-col gap-6">
               <h2 className="text-2xl font-semibold text-center">Recents Posts</h2>
-              <div className="flex flex-wrap gap-4 items-center justify-start sm:justify-between">
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-x-8 gap-y-8 items-center justify-center">
                 {
                   posts.map((post)=>(
                     <PostCrad key={post._id} post={post} />
