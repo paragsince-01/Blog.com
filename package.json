@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "bulid": "npm install && npm install --prefix Blog && npm run build --prefix Blog"
+    "build": "npm install && npm install --prefix Blog && npm run build --prefix Blog"
   },
   "keywords": [],
   "author": "",
