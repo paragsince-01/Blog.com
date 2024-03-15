@@ -10,7 +10,7 @@ export default function About() {
             About <strong className="text-3xl">Parag's Blog</strong>
           </h1>
           <div className="flex-1 flex-col my-2 gap-y-2 w-[70vw] text-justify leading-relaxed">
-            <p>
+            <p> 
               Welcome to Parag's Blog! This blof was created Parag Aggarwal as a
               persnaol project to share his thoughts and ideas with world. Parag
               is passinate developer who loves to create web application, pages
