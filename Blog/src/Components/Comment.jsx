@@ -186,6 +186,8 @@ export default function Comment({postId}) {
               <CommentSection
                 key={comment._id}
                 comment={comment}
+
+                
                 onLike={handleLike}
                 onEdit={handleEdit}
                 onDelete={(commentId) => {

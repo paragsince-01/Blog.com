@@ -89,7 +89,6 @@ export default function DashboardPosts() {
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
         {currentUser.isAdmin && postData.length > 0 ? (
           <>
-            HI I am mohit
             <Table hoverable className="shadow-md">
               <Table.Head className="text-sm font-medium tracking-wider text-gray-700  dark:text-white">
                 <Table.HeadCell>Date Updated</Table.HeadCell>
@@ -165,28 +164,7 @@ export default function DashboardPosts() {
           </>
         ) : (
           <>
-            <Navbar>
-              <ul>
-                <li >
-                    <Link to="/" className="text-lg">
-                      Home
-                    </Link>
-                  <li>
-                      <Link to="Dashboard/helo" className="text-lg">
-                        About
-                      </Link>
-                  </li>
-                  {/* <li>
-                    <Navbar.Link active={path === "/Projects"} as={"div"}>
-                      <Link to="/Projects" className="text-lg">
-                        Projects
-                      </Link>
-                    </Navbar.Link>
-                  </li> */}
-                </li>
-              </ul>
-            </Navbar>
-            <p>You Have NO Posts Yet!</p>
+            <p>You Have No Posts Yet!</p>
           </>
         )}
         <Modal

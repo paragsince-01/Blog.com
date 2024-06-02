@@ -22,7 +22,7 @@ export default function Create_Post() {
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
 
-  // This is handling the uploading the image for the post
+  // This is handling the uploading of image for the post
 
   const handlePostImage = async () => {
     try {
