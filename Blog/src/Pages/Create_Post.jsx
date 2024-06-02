@@ -122,6 +122,7 @@ export default function Create_Post() {
               <option value="node.js">Node.js</option>
               <option value="bootstrap">Bootstrap</option>
               <option value="materialui">MaterialUI</option>
+              <option value="others">Other Topics</option>
             </Select>
           </div>
           <div className="flex gap-4 items-center justify-between   border-4 border-amber-500 border-dotted p-3 ">

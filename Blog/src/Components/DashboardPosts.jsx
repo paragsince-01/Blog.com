@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  Modal,
+  Button,
+  Navbar,
+} from "flowbite-react";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -58,27 +65,31 @@ export default function DashboardPosts() {
   const handleDeletePost = async () => {
     setShowPopup(false);
     try {
-      const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,{
-        method: 'DELETE',
-      });
+      const res = await fetch(
+        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         console.log(data.message);
-      }
-      else{        
-        setPostData((prev)=>
-        prev.filter((post)=>post._id !== postIdToDelete));
+      } else {
+        setPostData((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
       }
     } catch (error) {
       console.log(error.message);
     }
   };
- 
+
   return (
     <>
       <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
         {currentUser.isAdmin && postData.length > 0 ? (
           <>
+            HI I am mohit
             <Table hoverable className="shadow-md">
               <Table.Head className="text-sm font-medium tracking-wider text-gray-700  dark:text-white">
                 <Table.HeadCell>Date Updated</Table.HeadCell>
@@ -153,7 +164,30 @@ export default function DashboardPosts() {
             )}
           </>
         ) : (
-          <p>You Have NO Posts Yet!</p>
+          <>
+            <Navbar>
+              <ul>
+                <li >
+                    <Link to="/" className="text-lg">
+                      Home
+                    </Link>
+                  <li>
+                      <Link to="Dashboard/helo" className="text-lg">
+                        About
+                      </Link>
+                  </li>
+                  {/* <li>
+                    <Navbar.Link active={path === "/Projects"} as={"div"}>
+                      <Link to="/Projects" className="text-lg">
+                        Projects
+                      </Link>
+                    </Navbar.Link>
+                  </li> */}
+                </li>
+              </ul>
+            </Navbar>
+            <p>You Have NO Posts Yet!</p>
+          </>
         )}
         <Modal
           show={showPopup}

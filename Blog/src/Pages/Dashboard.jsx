@@ -16,7 +16,7 @@ export default function Dashboard() {
     if (tabFormUrl) {
       setTab(tabFormUrl);
     }
-  }, [loaction.search]);
+  }, [loaction.search]); 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* ------------sidebar ------------*/}
